@@ -1,5 +1,5 @@
 /**
- * @file apply_transformation.hpp
+ * @file ApplyTransformation.hpp
  * @author your name (you@domain.com)
  * @brief 
  * @version 0.1
@@ -16,17 +16,17 @@ using namespace std;
 
 #include <string>
 
-class ApplyTransformation {
+class Transformation {
 protected:
     string new_file_path;
 public:
-    ApplyTransformation();
-    ~ApplyTransformation();
+    Transformation();
+    Transformation();
 
     virtual void transform();
 };
 
-class Resize : public ApplyTransformation {
+class Resize : public Transformation {
     void transform();
 };
 

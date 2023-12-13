@@ -15,31 +15,29 @@
 using namespace std;
 
 #include <string>
-// #include "Advertisement.hpp"
-
-class Advertisement;
+#include "Advertisement.hpp"
 
 
 class MetricLogger {
 public:
-    virtual string log(Advertisement*) = 0;
+    virtual string log(AdvertisementBase*) = 0;
 };
 
 class GetSize : public MetricLogger {
 public:
-    string log(Advertisement* ad);
+    string log(AdvertisementBase* ad);
 };
 
 class GetFrames : public MetricLogger {
-    string log(Advertisement* ad);
+    string log(AdvertisementBase* ad);
 };
 
 class GetSeconds : public MetricLogger {
-    string log(Advertisement*);
+    string log(AdvertisementBase*);
 };
 
 class GetFPS : public MetricLogger {
-    string log(Advertisement*);
+    string log(AdvertisementBase*);
 };
 
 

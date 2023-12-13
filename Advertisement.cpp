@@ -1,5 +1,12 @@
 #include "Advertisement.hpp"
 
+/*****************************************************************************/
+/******************* Implementation of AdvertisiementBase ********************/
+/*****************************************************************************/
+
+string AdvertisementBase::get_content_path() {
+    return path_to_ad;
+}
 
 /*****************************************************************************/
 /******************* Implementation of VideoAdvertisiement *******************/
@@ -13,10 +20,10 @@ VideoAdvertisement::VideoAdvertisement(string& vid_path, string& log_path) {
     path_to_log_file = log_path;   
 }
 
-VideoAdvertisement::~VideoAdvertisement() {
-    original_video.reset();
-    current_video.reset();
-}
+// VideoAdvertisement::~VideoAdvertisement() {
+//     original_video.reset();
+//     current_video.reset();
+// }
 
 cv::VideoCapture& VideoAdvertisement::get_content() {
     return *current_video;
@@ -42,10 +49,10 @@ ImageAdvertisement::ImageAdvertisement(string& img_path, string& log_path) {
     path_to_log_file = log_path;
 }
 
-ImageAdvertisement::~ImageAdvertisement() {
-    original_image.reset();
-    current_image.reset();
-}
+// ImageAdvertisement::~ImageAdvertisement() {
+//     original_image.reset();
+//     current_image.reset();
+// }
 
 cv::Mat& ImageAdvertisement::get_content() {
     return *current_image;

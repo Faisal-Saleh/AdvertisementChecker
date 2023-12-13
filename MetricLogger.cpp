@@ -3,16 +3,16 @@
 
 using namespace std;
 
-string GetSize::log(Advertisement* ad) {
+string GetSize::log(AdvertisementBase* ad) {
     return "not yet implemented";
 }
 
-string GetFrames::log(Advertisement* ad) {
+string GetFrames::log(AdvertisementBase* ad) {
     return "not yet implemented";
 }
-string GetFPS::log(Advertisement* ad) {
+string GetFPS::log(AdvertisementBase* ad) {
     return "not yet implemented";
 }
-string GetSeconds::log(Advertisement* ad) {
+string GetSeconds::log(AdvertisementBase* ad) {
     return "not yet implemented";
 }
