@@ -17,6 +17,7 @@ using namespace std;
 #include <string>
 #include "Advertisement.hpp"
 
+// TODO: make a split between the logging functions (like the case of GetDimensions) where needed
 
 class MetricLogger {
 public:
@@ -24,22 +25,25 @@ public:
 };
 
 class GetSize : public MetricLogger {
-public:
-    string log(AdvertisementBase* ad);
+    string log(AdvertisementBase*) override;
+};
+
+class GetDimensions : public MetricLogger {
+    string log(AdvertisementBase*) override;
+    string log(ImageAdvertisement*);
+    string log(VideoAdvertisement*);
 };
 
 class GetFrames : public MetricLogger {
-    string log(AdvertisementBase* ad);
+    string log(AdvertisementBase*) override;
 };
 
-class GetSeconds : public MetricLogger {
-    string log(AdvertisementBase*);
+class GetDuration : public MetricLogger {
+    string log(AdvertisementBase*) override;
 };
 
 class GetFPS : public MetricLogger {
-    string log(AdvertisementBase*);
+    string log(AdvertisementBase*) override;
 };
-
-
 
 #endif // _METRIC_LOGGER_H_

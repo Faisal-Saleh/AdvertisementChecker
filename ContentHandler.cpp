@@ -9,23 +9,10 @@
  * 
  */
 
-#include "Common.h"
 #include "ContentHandler.hpp"
 
-ContentHandler::ContentHandler(AdvertisementBase* ad): advertisement(ad) {
-    loggers.emplace_back(new GetSize());
-    loggers.emplace_back(new GetFrames());
-    // check if it is video
-    if (dynamic_cast<VideoAdvertisement*>(advertisement)) {
-        loggers.emplace_back(new GetFPS());
-        loggers.emplace_back(new GetSeconds());
-    } else if (!dynamic_cast<ImageAdvertisement*>(advertisement)) {
-        throw invalid_argument("argument to content_handler is unsupported\n");
-    }
-}
-
 void ContentHandler::add_metric_analyzer(MetricLogger* m) {
-    loggers.emplace_back(m);
+    logger_functions.emplace_back(m);
 }
 
 void ContentHandler::add_transformation(Transformation* t) {
@@ -33,17 +20,37 @@ void ContentHandler::add_transformation(Transformation* t) {
 }
 
 void ContentHandler::set_metrics(vector<MetricLogger*>& metrics) {
-    loggers = metrics;
+    logger_functions = metrics;
 }
 
 void ContentHandler::set_transformers(vector<Transformation*>& trans) {
     transformations = trans;
 }
 
-void ContentHandler::analyze() {
 
+/*****************************************************************************/
+/******************* Implementation of ImageContentHandler *******************/
+/*****************************************************************************/
+
+ImageContentHandler::ImageContentHandler(AdvertisementBase* ad, shared_ptr<spdlog::logger> l) {
+    advertisement = ad;
+    logger = l;
+    logger_functions.emplace_back(new GetSize());
+    logger_functions.emplace_back(new GetDimensions());
+    logger_functions.emplace_back(new GetFrames());
 }
 
-void ContentHandler::transform() {
 
+/*****************************************************************************/
+/******************* Implementation of VideoContentHandler *******************/
+/*****************************************************************************/
+
+VideoContentHandler::VideoContentHandler(AdvertisementBase* ad, shared_ptr<spdlog::logger> l) {
+    advertisement = ad;
+    logger = l;
+    logger_functions.emplace_back(new GetSize());
+    logger_functions.emplace_back(new GetDimensions());
+    logger_functions.emplace_back(new GetFrames());
+    logger_functions.emplace_back(new GetFPS());
+    logger_functions.emplace_back(new GetDuration());
 }

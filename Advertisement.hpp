@@ -20,7 +20,6 @@ using namespace std;
 class AdvertisementBase {
 protected:
     string path_to_ad;
-    string path_to_log_file;
 public:
     virtual ~AdvertisementBase() = default;
     string get_content_path();
@@ -40,8 +39,9 @@ private:
     shared_ptr<cv::VideoCapture> original_video;
     shared_ptr<cv::VideoCapture> current_video;
 public:
-    VideoAdvertisement(string& vid_path, string& log_path);
-
+    VideoAdvertisement(string& vid_path);
+    ~VideoAdvertisement();
+    
     cv::VideoCapture& get_content() override;
 
     void set_content(cv::VideoCapture& new_video) override;
@@ -54,11 +54,12 @@ private:
     shared_ptr<cv::Mat> original_image;
     shared_ptr<cv::Mat> current_image;
 public:
-    ImageAdvertisement(string& img_path, string& log_path);
+    ImageAdvertisement(string& img_path);
+    ~ImageAdvertisement();
 
     cv::Mat& get_content() override;
 
-    void set_content(cv::Mat& new_video) override;
+    void set_content(cv::Mat& new_image) override;
 
     void reset_content(void) override;
 };

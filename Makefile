@@ -13,21 +13,21 @@ INCLUDES = -I/usr/include/opencv4/
 LIBS = -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_videoio
 
 # Source files
-SRCS = main.cpp Advertisement.cpp MetricLogger.cpp
+SRCS = main.cpp Advertisement.cpp MetricLogger.cpp ApplyTransformation.cpp ContentHandler.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 
 # Target executable
-TARGET = adv
+TARGET = ad_check
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(TARGET) $(OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) -o $(TARGET) $(OBJS) $(LIBS) $(LDLIBS)
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) img_log vid_log

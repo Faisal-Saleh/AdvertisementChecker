@@ -2,8 +2,11 @@
 #include <filesystem>
 #include <string>
 #include <opencv2/opencv.hpp>
-// #include "Common.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include "Advertisement.hpp"
+#include "ContentHandler.hpp"
 
 using namespace std;
 namespace fs = filesystem;
@@ -27,24 +30,32 @@ bool is_video(const string& file_path) {
 }
 
 int main(int argc, const char* argv[]) {
-    if (argc != 2) {
-        cerr << "Usage: " << argv[0] << " path_to_folder" << endl;
+    if (argc != 4) {
+        cerr << "Usage: " << argv[0] << " <path_to_folder>" << " <image_log>" << " <video_log>" << endl;
         return 1;
     }
 
     string directory_path = argv[1];
+    auto img_logger = spdlog::basic_logger_mt("image_logger", argv[2]);
+    auto vid_logger = spdlog::basic_logger_mt("video_logger", argv[3]);
 
     // Iterate through the folder and its subdirectories
     for (const auto& entry : fs::recursive_directory_iterator(directory_path)) {
         if (entry.is_regular_file()) {
             // Check if the file has a valid extension
+            string path = entry.path();
             if (is_image(entry.path())) {
-                cout << "the file at: " << entry << " is an image." << endl;
+                // logger->info("the file at: " + path + "is an image.");
+                ImageContentHandler* img = new ImageContentHandler(new ImageAdvertisement(path), img_logger);
+                img->analyze();
             } else if (is_video(entry.path())) {
-                cout << "the file at: " << entry << " is a video." << endl;
+                VideoContentHandler* vid = new VideoContentHandler(new VideoAdvertisement(path), vid_logger);
+                vid->analyze();
+                // logger->info("the file at: " + path + "is a video.");
             } else {
-                cout << "the file at: " << entry << " is unsupported" << endl;
+                // logger->info("the file at: " + path + "is unsupported");
             }
         }
     }
+
 }
