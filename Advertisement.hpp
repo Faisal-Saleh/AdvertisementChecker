@@ -1,6 +1,6 @@
 /**
  * @file check_advertisement.hpp
- * @author your name (you@domain.com)
+ * @author Faisal Abdelmonem (fts@alumni.cmu.edu)
  * @brief 
  * @version 0.1
  * @date 2023-12-11
