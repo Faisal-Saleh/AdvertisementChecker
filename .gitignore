@@ -37,6 +37,8 @@ test2
 Content
 
 # executable and other hidden directories
-adv
+ad_check
+img_log
+vid_log
 .vscode/
 .git/
