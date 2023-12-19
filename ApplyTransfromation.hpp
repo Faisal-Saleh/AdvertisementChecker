@@ -1,6 +1,6 @@
 /**
  * @file ApplyTransformation.hpp
- * @author your name (you@domain.com)
+ * @author Faisal Abdelmonem (fts@alumni.cmu.edu)
  * @brief 
  * @version 0.1
  * @date 2023-12-11
@@ -16,19 +16,21 @@ using namespace std;
 
 #include <string>
 
-class Transformation {
-protected:
-    string new_file_path;
-public:
-    Transformation();
-    Transformation();
+namespace ads_checker{
+    class Transformation {
+    protected:
+        string new_file_path;
+    public:
+        Transformation();
+        ~Transformation();
 
-    virtual void transform();
-};
+        virtual void transform();
+    };
 
-class Resize : public Transformation {
-    void transform();
-};
+    class Resize : public Transformation {
+        void transform();
+    };
+}
 
 
 #endif // _APPLY_TRANSFORMATION_H_

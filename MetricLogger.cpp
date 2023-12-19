@@ -1,142 +1,92 @@
+/**
+ * @file MetricLogger.cpp
+ * @author Faisal Abdelmonem (fts@alumni.cmu.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-19
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <opencv2/opencv.hpp>
 #include <fstream>
 #include "MetricLogger.hpp"
 
 using namespace std;
+using namespace ads_checker;
 
-int get_frames(cv::VideoCapture video) {
-    return static_cast<int>(video.get(cv::CAP_PROP_FRAME_COUNT));
+/*****************************************************************************/
+/*********************** Implementation of MetricLogger **********************/
+/*****************************************************************************/
+
+string MetricLogger::log(shared_ptr<AdvertisementBase>) {
+    return "object type is not supported";
+} 
+
+string MetricLogger::log(shared_ptr<ImageAdvertisement>) {
+    return "imgAd default implementation of log is called";
 }
 
-double get_fps(cv::VideoCapture video) {
-    return video.get(cv::CAP_PROP_FPS);
+string MetricLogger::log(shared_ptr<VideoAdvertisement>) {
+    return "vidAd default implementation of log is called";
 }
 
-string GetSize::log(AdvertisementBase* ad) {
-    string file_path = ad->get_content_path();
-    ifstream file(file_path, std::ios::binary | std::ios::ate);
+/*****************************************************************************/
+/********************* Implementation of Derived Classes *********************/
+/*****************************************************************************/
+
+string GetSize::log(shared_ptr<AdvertisementBase> ad) {
+    int file_size = ad->get_size();
     
-    if (!file.is_open()) {
-        cerr << "Error opening file: " << file_path << std::endl;
-        return "";
-    }
-
-    streampos file_size = file.tellg();
-    file.close();
-
     return "Size: " + to_string(file_size) + " bytes";
 }
 
-string img_get_dimensions(ImageAdvertisement* ad) {
-    cv::Mat image = ad->get_content();
 
-    // if (image.empty()) {
-    //     std::cerr << "Error loading image.\n";
-    //     return "";
-    // }
-
-    int image_width = image.cols;
-    int image_height = image.rows;
-
-    return "Dimensions: " + to_string(image_width) + "x" + to_string(image_height) + " pixels";
+string GetDimensions::log(shared_ptr<ImageAdvertisement> img) {
+    auto dims = img->get_dimensions();
+    return "Dimensions: " + to_string(dims.first) + "x" + to_string(dims.second) + " pixels";
 }
 
-string vid_get_dimensions(VideoAdvertisement* ad) {
-    cv::VideoCapture video = ad->get_content();
-
-    if (!video.isOpened()) {
-        std::cerr << "Error opening video file.\n";
-        return "";
-    }
-
-    int video_width = static_cast<int>(video.get(cv::CAP_PROP_FRAME_WIDTH));
-    int video_height = static_cast<int>(video.get(cv::CAP_PROP_FRAME_HEIGHT));
-
-    return "Dimensions: " + to_string(video_width) + "x" + to_string(video_height) + " pixels";
+string GetDimensions::log(shared_ptr<VideoAdvertisement> vid) {
+    auto dims = vid->get_dimensions();
+    return "Dimensions: " + to_string(dims.first) + "x" + to_string(dims.second) + " pixels";
 }
 
-// TODO: perhaps see if it is possible to overload on the input type so that
-//       the helper functions are not needed.
-string GetDimensions::log(AdvertisementBase* ad) {
-    ImageAdvertisement* img = dynamic_cast<ImageAdvertisement*>(ad); 
-    VideoAdvertisement* vid = dynamic_cast<VideoAdvertisement*>(ad); 
-    if (img) {
-        return img_get_dimensions(img);
-    } else if (vid) {
-        return vid_get_dimensions(vid);
-    } else {
-        return "Object passed is not supported";
-    }
+string GetFrames::log(shared_ptr<ImageAdvertisement>) {
+    return "Frames: 1";
 }
 
-string GetFrames::log(AdvertisementBase* ad) {
-    if (dynamic_cast<ImageAdvertisement*>(ad)) {
-        return "Frames: 1";
-    } else {
-        VideoAdvertisement* video_obj = dynamic_cast<VideoAdvertisement*>(ad);
-        assert(video_obj);
-        
-        cv::VideoCapture video = video_obj->get_content();
-        if (!video.isOpened()) {
-            std::cerr << "Error opening video file.\n";
-            return "";
-        }
+string GetFrames::log(shared_ptr<VideoAdvertisement> ad) {
+    shared_ptr<VideoAdvertisement> video_obj = dynamic_pointer_cast<VideoAdvertisement>(ad);
+    assert(video_obj);
+    
+    int total_frames = video_obj->get_frames();
 
-        // Get the total number of frames in the video
-        int total_frames = get_frames(video);
+    return "Frames: " + to_string(total_frames);
 
-        // Display the result
-        return "Frames: " + to_string(total_frames);
-
-    }
-    return "";
 }
 
-string GetFPS::log(AdvertisementBase* ad) {
-    if (dynamic_cast<ImageAdvertisement*>(ad)) {
-        cerr << "Can't get the fps of an image." << endl;
-        return "";
-    } else {
-        VideoAdvertisement* video_obj = dynamic_cast<VideoAdvertisement*>(ad);
-        assert(video_obj);
-        
-        cv::VideoCapture video = video_obj->get_content();
-        if (!video.isOpened()) {
-            std::cerr << "Error opening video file.\n";
-            return "";
-        }
+string GetFPS::log(shared_ptr<VideoAdvertisement> video_obj) {
+    assert(video_obj);
+    
+    int fps = static_cast<int>(video_obj->get_fps());
 
-        // Get the total number of frames in the video
-        int fps = static_cast<int>(get_fps(video));
-
-        // Display the result
-        return "fps: " + to_string(fps);
-
-    }
-    return "";
+    return "fps: " + to_string(fps);
 }
 
-string GetDuration::log(AdvertisementBase* ad) {
-    if (dynamic_cast<ImageAdvertisement*>(ad)) {
-        cerr << "Can't get the duration of an image." << endl;
-        return "";
-    } else {
-        VideoAdvertisement* video_obj = dynamic_cast<VideoAdvertisement*>(ad);
-        assert(video_obj);
-        
-        cv::VideoCapture video = video_obj->get_content();
-        if (!video.isOpened()) {
-            std::cerr << "Error opening video file.\n";
-            return "";
-        }
+string GetDuration::log(shared_ptr<VideoAdvertisement> video_obj) {
+    assert(video_obj);
 
-        // Get the total number of frames in the video
-        double fps = get_fps(video);
-        int total_frames = get_frames(video);
+    // Get the total number of frames in the video
+    double fps = video_obj->get_fps();
+    int total_frames = video_obj->get_frames();
 
-        double duration = total_frames / fps;
+    double duration = total_frames / fps;
 
-        // Display the result
-        return "Seconds: " + to_string(duration);
-    }
+    stringstream time;
+    time << fixed << setprecision(2) << duration;
+
+    // Display the result
+    return "Seconds: " + time.str();
 }

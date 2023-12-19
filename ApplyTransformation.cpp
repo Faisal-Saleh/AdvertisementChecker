@@ -1,6 +1,6 @@
 /**
  * @file ApplyTransformation.cpp
- * @author your name (you@domain.com)
+ * @author Faisal Abdelmonem (fts@alumni.cmu.edu)
  * @brief 
  * @version 0.1
  * @date 2023-12-12
@@ -10,3 +10,4 @@
  */
 
 #include "ApplyTransfromation.hpp"
+using namespace ads_checker;

@@ -1,3 +1,14 @@
+/**
+ * @file main.cpp
+ * @author Faisal Abdelmonem (fts@alumni.cmu.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-12-19
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <iostream>
 #include <filesystem>
 #include <string>
@@ -9,6 +20,7 @@
 #include "ContentHandler.hpp"
 
 using namespace std;
+using namespace ads_checker;
 namespace fs = filesystem;
 
 bool ends_with(const string& full_string, const string& suffix) {
@@ -45,15 +57,15 @@ int main(int argc, const char* argv[]) {
             // Check if the file has a valid extension
             string path = entry.path();
             if (is_image(entry.path())) {
-                // logger->info("the file at: " + path + "is an image.");
-                ImageContentHandler* img = new ImageContentHandler(new ImageAdvertisement(path), img_logger);
-                img->analyze();
+                shared_ptr<ImageAdvertisement> img = make_shared<ImageAdvertisement>(ImageAdvertisement(path));
+                unique_ptr<ImageContentHandler> img_handler = make_unique<ImageContentHandler>(ImageContentHandler(img , img_logger));
+                img_handler->analyze<ImageAdvertisement>();
             } else if (is_video(entry.path())) {
-                VideoContentHandler* vid = new VideoContentHandler(new VideoAdvertisement(path), vid_logger);
-                vid->analyze();
-                // logger->info("the file at: " + path + "is a video.");
+                shared_ptr<VideoAdvertisement> vid = make_shared<VideoAdvertisement>(VideoAdvertisement(path));
+                unique_ptr<VideoContentHandler> vid_handler = make_unique<VideoContentHandler>(VideoContentHandler(vid , vid_logger));
+                vid_handler->analyze<VideoAdvertisement>();
             } else {
-                // logger->info("the file at: " + path + "is unsupported");
+                cerr << "file type is unsupported" << endl;
             }
         }
     }

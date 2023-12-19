@@ -1,6 +1,6 @@
 /**
  * @file metric_logging.hpp
- * @author your name (you@domain.com)
+ * @author Faisal Abdelmonem (fts@alumni.cmu.edu)
  * @brief 
  * @version 0.1
  * @date 2023-12-11
@@ -17,33 +17,37 @@ using namespace std;
 #include <string>
 #include "Advertisement.hpp"
 
-// TODO: make a split between the logging functions (like the case of GetDimensions) where needed
+namespace ads_checker {
+    class MetricLogger {
+    public:
+        virtual string log(shared_ptr<AdvertisementBase>);
+        virtual string log(shared_ptr<ImageAdvertisement>);
+        virtual string log(shared_ptr<VideoAdvertisement>);
+    };
 
-class MetricLogger {
-public:
-    virtual string log(AdvertisementBase*) = 0;
-};
+    class GetSize final : public MetricLogger {
+        string log(shared_ptr<AdvertisementBase>) override;
+        string log(shared_ptr<ImageAdvertisement> ad) override { return GetSize::log(static_pointer_cast<AdvertisementBase>(ad)); }
+        string log(shared_ptr<VideoAdvertisement> ad) override { return GetSize::log(static_pointer_cast<AdvertisementBase>(ad)); }
+    };
 
-class GetSize : public MetricLogger {
-    string log(AdvertisementBase*) override;
-};
+    class GetDimensions final : public MetricLogger {
+        string log(shared_ptr<ImageAdvertisement>) override;
+        string log(shared_ptr<VideoAdvertisement>) override;
+    };
 
-class GetDimensions : public MetricLogger {
-    string log(AdvertisementBase*) override;
-    string log(ImageAdvertisement*);
-    string log(VideoAdvertisement*);
-};
+    class GetFrames final : public MetricLogger {
+        string log(shared_ptr<ImageAdvertisement>) override;
+        string log(shared_ptr<VideoAdvertisement>) override;
+    };
 
-class GetFrames : public MetricLogger {
-    string log(AdvertisementBase*) override;
-};
+    class GetDuration final : public MetricLogger {
+        string log(shared_ptr<VideoAdvertisement>) override;
+    };
 
-class GetDuration : public MetricLogger {
-    string log(AdvertisementBase*) override;
-};
-
-class GetFPS : public MetricLogger {
-    string log(AdvertisementBase*) override;
-};
+    class GetFPS final : public MetricLogger {
+        string log(shared_ptr<VideoAdvertisement>) override;
+    };
+}
 
 #endif // _METRIC_LOGGER_H_
