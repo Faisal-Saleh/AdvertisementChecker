@@ -18,35 +18,38 @@ using namespace std;
 #include "Advertisement.hpp"
 
 namespace ads_checker {
+    using ImageAdv = shared_ptr<ImageAdvertisement>;
+    using VideoAdv = shared_ptr<VideoAdvertisement>;
+
     class MetricLogger {
     public:
         virtual string log(shared_ptr<AdvertisementBase>);
-        virtual string log(shared_ptr<ImageAdvertisement>);
-        virtual string log(shared_ptr<VideoAdvertisement>);
+        virtual string log(ImageAdv);
+        virtual string log(VideoAdv);
     };
 
     class GetSize final : public MetricLogger {
         string log(shared_ptr<AdvertisementBase>) override;
-        string log(shared_ptr<ImageAdvertisement> ad) override { return GetSize::log(static_pointer_cast<AdvertisementBase>(ad)); }
-        string log(shared_ptr<VideoAdvertisement> ad) override { return GetSize::log(static_pointer_cast<AdvertisementBase>(ad)); }
+        string log(ImageAdv ad) override { return GetSize::log(static_pointer_cast<AdvertisementBase>(ad)); }
+        string log(VideoAdv ad) override { return GetSize::log(static_pointer_cast<AdvertisementBase>(ad)); }
     };
 
     class GetDimensions final : public MetricLogger {
-        string log(shared_ptr<ImageAdvertisement>) override;
-        string log(shared_ptr<VideoAdvertisement>) override;
+        string log(ImageAdv) override;
+        string log(VideoAdv) override;
     };
 
     class GetFrames final : public MetricLogger {
-        string log(shared_ptr<ImageAdvertisement>) override;
-        string log(shared_ptr<VideoAdvertisement>) override;
+        string log(ImageAdv) override;
+        string log(VideoAdv) override;
     };
 
     class GetDuration final : public MetricLogger {
-        string log(shared_ptr<VideoAdvertisement>) override;
+        string log(VideoAdv) override;
     };
 
     class GetFPS final : public MetricLogger {
-        string log(shared_ptr<VideoAdvertisement>) override;
+        string log(VideoAdv) override;
     };
 }
 

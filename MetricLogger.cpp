@@ -24,11 +24,11 @@ string MetricLogger::log(shared_ptr<AdvertisementBase>) {
     return "object type is not supported";
 } 
 
-string MetricLogger::log(shared_ptr<ImageAdvertisement>) {
+string MetricLogger::log(ImageAdv) {
     return "imgAd default implementation of log is called";
 }
 
-string MetricLogger::log(shared_ptr<VideoAdvertisement>) {
+string MetricLogger::log(VideoAdv) {
     return "vidAd default implementation of log is called";
 }
 
@@ -43,22 +43,22 @@ string GetSize::log(shared_ptr<AdvertisementBase> ad) {
 }
 
 
-string GetDimensions::log(shared_ptr<ImageAdvertisement> img) {
+string GetDimensions::log(ImageAdv img) {
     auto dims = img->get_dimensions();
     return "Dimensions: " + to_string(dims.first) + "x" + to_string(dims.second) + " pixels";
 }
 
-string GetDimensions::log(shared_ptr<VideoAdvertisement> vid) {
+string GetDimensions::log(VideoAdv vid) {
     auto dims = vid->get_dimensions();
     return "Dimensions: " + to_string(dims.first) + "x" + to_string(dims.second) + " pixels";
 }
 
-string GetFrames::log(shared_ptr<ImageAdvertisement>) {
+string GetFrames::log(ImageAdv) {
     return "Frames: 1";
 }
 
-string GetFrames::log(shared_ptr<VideoAdvertisement> ad) {
-    shared_ptr<VideoAdvertisement> video_obj = dynamic_pointer_cast<VideoAdvertisement>(ad);
+string GetFrames::log(VideoAdv ad) {
+    VideoAdv video_obj = dynamic_pointer_cast<VideoAdvertisement>(ad);
     assert(video_obj);
     
     int total_frames = video_obj->get_frames();
@@ -67,7 +67,7 @@ string GetFrames::log(shared_ptr<VideoAdvertisement> ad) {
 
 }
 
-string GetFPS::log(shared_ptr<VideoAdvertisement> video_obj) {
+string GetFPS::log(VideoAdv video_obj) {
     assert(video_obj);
     
     int fps = static_cast<int>(video_obj->get_fps());
@@ -75,7 +75,7 @@ string GetFPS::log(shared_ptr<VideoAdvertisement> video_obj) {
     return "fps: " + to_string(fps);
 }
 
-string GetDuration::log(shared_ptr<VideoAdvertisement> video_obj) {
+string GetDuration::log(VideoAdv video_obj) {
     assert(video_obj);
 
     // Get the total number of frames in the video
